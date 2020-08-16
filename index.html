@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image:url(images/bg-image.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 100vh;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input id="input-box" type="text" class="form-control" placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button id="btn" type="button" class="btn btn-danger">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="weather-status text-center">
+            <img id="weather-icon" src="https://openweathermap.org/img/wn/02d@2x.png" alt="" width="150">
+            <h1 id="city">City Name</h1>
+            <h3><span id="temp">00.</span>&deg;C</h3>
+            <h1 class="lead" id="weather"><b>clouds</b></h1>
+        </div>
+    </div>
+
+    <script>
+
+        const api={
+            key : "c92e79b5e855e78bd15ec171192e92a2",
+            baseUrl: "https://api.openweathermap.org/data/2.5/weather"
+        }
+
+         const searchBox= document.getElementById("btn");
+               searchBox.addEventListener('click',function(){
+         const inputBox = document.getElementById("input-box").value;
+         console.log(inputBox);
+         getWeatherReport(inputBox); 
+     });
+
+
+     function getWeatherReport(city){
+         fetch(`${api.baseUrl}?q=${city}&appid=${api.key}&units=metric`)
+         .then(weather => {
+             return weather.json();
+        
+         }).then(showWeatherReport);
+       
+     }
+
+
+       function showWeatherReport(weather) {
+           console.log(weather);
+           let city=document.getElementById('city');
+           city.innerText=`${weather.name},${weather.sys.country}`;
+
+           let temperature= document.getElementById("temp");
+             temperature.innerHTML=`${Math.round(weather.main.temp)}`;
+            
+           let weatherType =document.getElementById('weather');
+               weatherType.innerText=`${weather.weather[0].main}`;
+        
+           let weatherIcon =document.getElementById('weather-icon');
+             weatherIcon.src=`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`;
+          
+          if (weatherType.textContent == "Rain") {
+                 document.body.style.backgroundImage= "url(images/rain.jpg)";
+                 document.body.style.color='black';
+
+          } else if(weatherType.textContent == "Clear"){
+            document.body.style.backgroundImage= "url(images/clear.jpg)";
+             document.body.style.color='black';
+
+          }  else if(weatherType.textContent == "Clouds"){
+            document.body.style.backgroundImage= "url(images/clouds.jpg)";
+             document.body.style.color='black';
+          }
+       }
+ </script>
+
+
+</body>
+
+</html>
